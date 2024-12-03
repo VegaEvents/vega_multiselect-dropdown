@@ -110,6 +110,7 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
   })  : future = null,
         search = null,
         searchDebounceDuration = null,
+        loadingBuilder = null,
         super(key: key);
 
   /// Creates a multiselect dropdown widget with future request.
@@ -156,6 +157,7 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
     this.onSelectionChange,
     this.onSearchChange,
     this.closeOnBackButton = false,
+    this.loadingBuilder,
     Key? key,
   })  : items = const [],
         search = null,
@@ -182,6 +184,7 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
     this.focusNode,
     this.onSelectionChange,
     this.closeOnBackButton = false,
+    this.loadingBuilder,
     Key? key,
   })  : items = const [],
         searchEnabled = true,
@@ -254,6 +257,8 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
 
   /// The callback when the search field value changes.
   final OnSearchChanged? onSearchChange;
+
+  final Widget Function(BuildContext context)? loadingBuilder;
 
   /// Whether to close the dropdown when the back button is pressed.
   ///
@@ -588,6 +593,10 @@ class _MultiDropdownState<T extends Object> extends State<MultiDropdown<T>> {
 
   Widget? _buildSuffixIcon() {
     if (_loadingController.value) {
+      if (widget.loadingBuilder != null) {
+        return widget.loadingBuilder!(context);
+      }
+
       return const CircularProgressIndicator.adaptive();
     }
 
