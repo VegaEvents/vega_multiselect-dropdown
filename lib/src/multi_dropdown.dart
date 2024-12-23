@@ -106,6 +106,7 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
     this.onSelectionChange,
     this.onSearchChange,
     this.closeOnBackButton = false,
+    this.fieldMaxHeight,
     Key? key,
   })  : future = null,
         search = null,
@@ -158,6 +159,7 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
     this.onSearchChange,
     this.closeOnBackButton = false,
     this.loadingBuilder,
+    this.fieldMaxHeight,
     Key? key,
   })  : items = const [],
         search = null,
@@ -185,6 +187,7 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
     this.onSelectionChange,
     this.closeOnBackButton = false,
     this.loadingBuilder,
+    this.fieldMaxHeight,
     Key? key,
   })  : items = const [],
         searchEnabled = true,
@@ -264,6 +267,8 @@ class MultiDropdown<T extends Object> extends StatefulWidget {
   ///
   /// Note: This option requires the app to have a router, such as MaterialApp.router, in order to work properly.
   final bool closeOnBackButton;
+
+  final double? fieldMaxHeight;
 
   @override
   State<MultiDropdown<T>> createState() => _MultiDropdownState<T>();
@@ -643,8 +648,9 @@ class _MultiDropdownState<T extends Object> extends State<MultiDropdown<T>> {
   Widget _buildSelectedItems(List<DropdownItem<T>> selectedOptions) {
     final chipDecoration = widget.chipDecoration;
 
+    Widget? wrappedItems;
     if (widget.selectedItemBuilder != null) {
-      return Wrap(
+      wrappedItems = Wrap(
         spacing: chipDecoration.spacing,
         runSpacing: chipDecoration.runSpacing,
         crossAxisAlignment: WrapCrossAlignment.center,
@@ -653,12 +659,24 @@ class _MultiDropdownState<T extends Object> extends State<MultiDropdown<T>> {
     }
 
     if (chipDecoration.wrap) {
-      return Wrap(
+      wrappedItems = Wrap(
         spacing: chipDecoration.spacing,
         runSpacing: chipDecoration.runSpacing,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: selectedOptions.map((option) => _buildChip(option, chipDecoration)).toList(),
       );
+    }
+
+    if (wrappedItems != null) {
+      if (widget.fieldMaxHeight != null) {
+        return ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: widget.fieldMaxHeight!),
+            child: SingleChildScrollView(
+              child: wrappedItems,
+            ));
+      }
+
+      return wrappedItems;
     }
 
     return ConstrainedBox(
@@ -689,7 +707,13 @@ class _MultiDropdownState<T extends Object> extends State<MultiDropdown<T>> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(option.label, style: chipDecoration.labelStyle),
+          Flexible(
+            child: Text(
+              option.label,
+              style: chipDecoration.labelStyle,
+              overflow: TextOverflow.ellipsis, // Truncate if the text is too long
+            ),
+          ),
           const SizedBox(width: 4),
           InkWell(
             onTap: () {

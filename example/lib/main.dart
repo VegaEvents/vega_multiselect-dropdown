@@ -59,14 +59,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var items = [
-      DropdownItem(label: 'Nepal', value: User(name: 'Nepal', id: 1)),
-      DropdownItem(label: 'Australia', value: User(name: 'Australia', id: 6)),
-      DropdownItem(label: 'India', value: User(name: 'India', id: 2)),
-      DropdownItem(label: 'China', value: User(name: 'China', id: 3)),
-      DropdownItem(label: 'USA', value: User(name: 'USA', id: 4)),
-      DropdownItem(label: 'UK', value: User(name: 'UK', id: 5)),
-      DropdownItem(label: 'Germany', value: User(name: 'Germany', id: 7)),
-      DropdownItem(label: 'France', value: User(name: 'France', id: 8)),
+      DropdownItem(id: '1', label: 'Nepal', value: User(name: 'Nepal', id: 1)),
+      DropdownItem(id: '6', label: 'Australia', value: User(name: 'Australia', id: 6)),
+      DropdownItem(id: '2', label: 'India', value: User(name: 'India', id: 2)),
+      DropdownItem(id: '3', label: 'China', value: User(name: 'China', id: 3)),
+      DropdownItem(id: '4', label: 'USA', value: User(name: 'USA', id: 4)),
+      DropdownItem(id: '5', label: 'UK', value: User(name: 'UK', id: 5)),
+      DropdownItem(id: '7', label: 'Germany', value: User(name: 'Germany', id: 7)),
+      DropdownItem(id: '8', label: 'France', value: User(name: 'France', id: 8)),
     ];
     return Scaffold(
         backgroundColor: Colors.white,
@@ -130,10 +130,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         dropdownItemDecoration: DropdownItemDecoration(
-                          selectedIcon:
-                              const Icon(Icons.check_box, color: Colors.green),
-                          disabledIcon:
-                              Icon(Icons.lock, color: Colors.grey.shade300),
+                          selectedIcon: const Icon(Icons.check_box, color: Colors.green),
+                          disabledIcon: Icon(Icons.lock, color: Colors.grey.shade300),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -174,19 +172,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           ElevatedButton(
                             onPressed: () {
                               controller.addItems([
-                                DropdownItem(
-                                    label: 'France',
-                                    value: User(name: 'France', id: 8)),
+                                DropdownItem(id: '8', label: 'France', value: User(name: 'France', id: 8)),
                               ]);
                             },
                             child: const Text('Add Items'),
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              controller.selectWhere((element) =>
-                                  element.value.id == 1 ||
-                                  element.value.id == 2 ||
-                                  element.value.id == 3);
+                              controller.selectWhere(
+                                  (element) => element.value.id == 1 || element.value.id == 2 || element.value.id == 3);
                             },
                             child: const Text('Select Where'),
                           ),

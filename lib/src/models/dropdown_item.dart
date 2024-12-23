@@ -9,6 +9,7 @@ class DropdownItem<T> {
   DropdownItem({
     required this.label,
     required this.value,
+    required this.id,
     this.disabled = false,
     this.selected = false,
   });
@@ -22,6 +23,7 @@ class DropdownItem<T> {
   /// - 'selected': Indicates whether the dropdown item is selected (optional, default is false).
   factory DropdownItem.fromMap(Map<String, dynamic> map) {
     return DropdownItem<T>(
+      id: map['id'] as String? ?? '',
       label: map['label'] as String? ?? '',
       value: map['value'] as T,
       disabled: map['disabled'] as bool? ?? false,
@@ -31,6 +33,8 @@ class DropdownItem<T> {
 
   /// The label of the dropdown item.
   final String label;
+
+  final String id;
 
   /// The value associated with the dropdown item.
   final T value;
@@ -77,8 +81,7 @@ class DropdownItem<T> {
   }
 
   @override
-  int get hashCode =>
-      label.hashCode ^ value.hashCode ^ disabled.hashCode ^ selected.hashCode;
+  int get hashCode => id.hashCode;
 
   /// Creates a copy of the [DropdownItem] instance with the specified properties.
   ///
@@ -90,6 +93,7 @@ class DropdownItem<T> {
     bool? selected,
   }) {
     return DropdownItem<T>(
+      id: this.id,
       label: label ?? this.label,
       value: value ?? this.value,
       disabled: disabled ?? this.disabled,
